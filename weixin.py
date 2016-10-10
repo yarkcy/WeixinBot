@@ -1001,7 +1001,14 @@ class WebWeixin(object):
             request.add_header('Range', 'bytes=0-')
         if api == 'webwxgetvideo':
             request.add_header('Range', 'bytes=0-')
-        response = urllib2.urlopen(request)
+
+        while True:
+            try:
+                response = urllib2.urlopen(request)
+                break
+            except urllib2.HTTPError as e:
+                print e
+                time.sleep(3)
         data = response.read()
         logging.debug(url)
         return data
@@ -1013,7 +1020,14 @@ class WebWeixin(object):
                 'ContentType', 'application/json; charset=UTF-8')
         else:
             request = urllib2.Request(url=url, data=urllib.urlencode(params))
-        response = urllib2.urlopen(request)
+        while True:
+            try:
+                response = urllib2.urlopen(request)
+                break
+            except urllib2.HTTPError as e:
+                print e
+                time.sleep(3)
+
         data = response.read()
         if jsonfmt:
             return json.loads(data, object_hook=_decode_dict)
